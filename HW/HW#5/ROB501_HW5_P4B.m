@@ -66,6 +66,6 @@ title('Original Data and 5th Order Polynomial Fit', 'FontSize', 28, 'FontWeight'
 % Reduce Margins
 set(gca, 'LooseInset', max(get(gca, 'TightInset'), 0.02));
 
-% Save the figure as a high-resolution image
-print('ROB501-HW#4-P4A.png', '-dpng', '-r300');
+% Save the figure
+print('ROB501-HW#4-P4B.png', '-dpng', '-r300');
 
