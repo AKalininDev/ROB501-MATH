@@ -11,7 +11,10 @@ A = [t.^0, t.^1, t.^2, t.^3, t.^4, t.^5];
 
 %% Check for 0 determinant
 
-det(A'*A) ~= 0
+if (det(A'*A) ~= 0)
+    display("det(A^TA) != 0. Can compute the best fit.")
+end
+
 
 %% Compute the Polynomial
 a = inv(A'*A)*A'* y;
@@ -67,5 +70,5 @@ title('Figure 1. Problem 4B. Least Squares Polynomial Fit.', 'FontSize', 28, 'Fo
 set(gca, 'LooseInset', max(get(gca, 'TightInset'), 0.02));
 
 % Save the figure
-print('ROB501-HW#4-P4B.png', '-dpng', '-r300');
+print('ROB501-HW#5-P4B.png', '-dpng', '-r300');
 

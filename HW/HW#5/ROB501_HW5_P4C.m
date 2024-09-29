@@ -69,4 +69,4 @@ title('Figure 2. Problem 4C. Least Squares Sinusoidal Fit.', 'FontSize', 28, 'Fo
 set(gca, 'LooseInset', max(get(gca, 'TightInset'), 0.02));
 
 % Save the figure
-print('ROB501-HW#4-P4C.png', '-dpng', '-r300');
+print('ROB501-HW#5-P4C.png', '-dpng', '-r300');
