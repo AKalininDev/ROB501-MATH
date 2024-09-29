@@ -61,7 +61,7 @@ end
 legend_str = sprintf('Best Polynomial Fit (MSE): p(t)= $%s$', coeff_str);
 legend({'Original Data', legend_str}, 'FontSize', 18, 'FontWeight', 'bold', 'Interpreter', 'latex');
 
-title('Original Data and 5th Order Polynomial Fit', 'FontSize', 28, 'FontWeight', 'bold');
+title('Figure 1. Problem 4B. Least Squares Polynomial Fit.', 'FontSize', 28, 'FontWeight', 'bold');
 
 % Reduce Margins
 set(gca, 'LooseInset', max(get(gca, 'TightInset'), 0.02));
