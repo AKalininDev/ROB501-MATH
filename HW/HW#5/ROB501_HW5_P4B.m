@@ -1,4 +1,4 @@
-%% ROB 501. HW#5 Problem 4A.
+%% ROB 501. HW#5 Problem 4B.
 % Find the best fit (5th order polynomial) of data
 
 %% Load the Data
