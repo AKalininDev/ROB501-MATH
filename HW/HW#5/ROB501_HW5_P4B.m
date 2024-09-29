@@ -31,7 +31,7 @@ figure('Position', [100, 100, 1600, 900]);
 
 % Plot the original data and the polynomial
 hold on;
-plot(t, y, '*', "MarkerSize", 15);
+plot(t, y, 's', "MarkerSize", 15, 'MarkerEdgeColor', 'b', 'MarkerFaceColor', 'b');  % Original data (blue markers)
 plot(t_values, y_values, "LineWidth", 5);
 hold off;
 
