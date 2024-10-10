@@ -1,89 +1,26 @@
-% ROB 501. HW#6 Problem 2A.
-% Find the best fit of data and estimate its derivative
+%% ROB 501. HW#6 Problem 2.
+% Test Naive and Regression Derivative estimation Techniques
 
-% Clear workspace and close all figures
-clear all; close all; clc;
+%% Clear Workspace and Close All Figures
 
-% Load data
-load('DataHW06_Prob2.mat');
+clear all; 
+close all; 
+clc;
 
-% Initialize variables
+%% Load data & Set the Simulation Parameters
+
+load('DataHW06_Prob2.mat'); % Loads t, y, dy
 window_size = 3;
-t_window = [];
-y_window = [];
-t_all = [];
-y_all = [];
-y_derivative = [];
-y_naive_derivative = [];
-last_index = 0;
 
-% Main loop for processing data
-while true
-    
-    [new_t, new_y, last_index] = probeNext(t, y, last_index);
+%% Process Incoming Data
 
-    if isnan(new_t)
-        break;
-    end
-    
-    % Update windows
-    t_window = insert_point(t_window, new_t, window_size);
-    y_window = insert_point(y_window, new_y, window_size);
-    
-    % Normalize time window
-    normalized_t_window = t_window - min(t_window);
-    
-    % Construct design matrix for cubic polynomial
-    A = [ones(size(normalized_t_window')), normalized_t_window', (normalized_t_window').^2];
-    
-    % Find best fit coefficients
-    best_fit = findBestFit(A, y_window');
-    
-    % Estimate derivative at the latest point
-    if ~any(isnan(best_fit))
-        best_fit_der = polyder(flip(best_fit));
-        best_der_fit_val = polyval(best_fit_der, normalized_t_window(end));
-    else
-        best_der_fit_val = nan;
-    end
+[t_processed, y_derivative, y_naive] = processData(t, y, window_size);
 
+RMSE_regression = computeRMSE(dy(window_size:end), y_derivative'); % Need to make sure that dy and the y_derivative are the same size
+RMSE_naive = computeRMSE(dy(window_size:end), y_naive');
 
-    % Compute Naive Derivative
-   
-    if (size(y_window) == 1)
+%% Plot the Results
 
-        old_y = y_window(1);
-        old_t = t_window(1);
-        y_naive_derivative(1) = 0;
-
-    else
-        new_y = y_window(end);
-        new_t = t_window(end);
-
-        y_naive_derivative(end + 1) = (new_y - old_y) / (new_t - old_t);
-
-        old_y = new_y;
-        old_t = new_t;
-    
-    end;
-    
-    
-    % Store results
-    y_derivative(end + 1) = best_der_fit_val;
-    t_all(end + 1) = new_t;
-
-
-    
-end
-
-%% Compute RMSE
-
-valid_indices = 3:length(t);
-RMSE_regression = sqrt(mean((dy(valid_indices) - y_derivative(valid_indices)).^2, "all"));
-RMSE_naive = sqrt(mean((dy(valid_indices) - y_naive_derivative(valid_indices)).^2, "all"));
-
-
-%% Plot the results
 figure('Position', [100, 100, 1600, 900]);
 sgtitle('Figure 1. Problem 2, Comparing dy/dt Estimation Techniques',...
     'FontSize', 24, 'FontWeight', 'bold');
@@ -92,7 +29,8 @@ sgtitle('Figure 1. Problem 2, Comparing dy/dt Estimation Techniques',...
 subplot(3,1,1);
 
 original_data_name = "Original Data.";
-plot(t, y, 'b--', 'LineWidth', 4, "DisplayName", original_data_name);
+plot(t, y, '*', 'MarkerSize', 4, "DisplayName", original_data_name);
+
 grid on;
 set(gca, 'FontSize', 14);
 set(gca,'Xticklabel',[]);
@@ -102,87 +40,110 @@ legend(FontSize=16);
 % Naive Estimation vs True Derivative
 subplot(3,1,2);
 
-% naive data
 naive_der_est_name = "Naive dy/dt Estimation. (Part A)";
-plot(t_all(3:end), y_naive_derivative(3:end), 'b-', 'LineWidth', 4, 'DisplayName', naive_der_est_name);
+plot(t_processed, y_naive, 'b-', 'LineWidth', 4, 'DisplayName', naive_der_est_name);
 hold on;
 
-% true derivative
 true_der_name = "True Derivative.";
 plot(t, dy, 'r--', 'LineWidth', 3, "DisplayName", true_der_name);
 hold off;
 
-
-% decorations
-grid on;
-set(gca, 'FontSize', 14);
-ylabel('dy/dt', 'FontSize', 16);
-set(gca,'Xticklabel',[]);
-legend(FontSize=16);
 x_pos = 0.01;  
 y_pos = 10; 
 text(x_pos, y_pos, sprintf('$\\sqrt{\\frac{1}{n}\\sum_{i=1}^n (\\hat{y}_i - y_i)^2}$ = %.4f', RMSE_naive), ...
     'Interpreter', 'latex', 'FontSize', 14, 'BackgroundColor', 'white', 'EdgeColor', 'black');
 
+grid on;
+set(gca, 'FontSize', 14);
+ylabel('dy/dt', 'FontSize', 16);
+set(gca,'Xticklabel',[]);
+legend(FontSize=16);
 
 
 % Regression Derivative vs Real Derivative
 subplot(3,1,3);
 
-% Regression Estimation
-estimated_der_name = "Regression dy/dt Estimation. (Part B)";
-plot(t_all(3:end), y_derivative(3:end), 'b-', 'LineWidth', 4, 'DisplayName', estimated_der_name);
+estimated_der_name = "Regression (3 points) dy/dt Estimation. (Part B)";
+plot(t_processed, y_derivative, 'b-', 'LineWidth', 4, 'DisplayName', estimated_der_name);
 hold on;
 
 true_der_name = "True Derivative.";
 plot(t, dy, 'r--', 'LineWidth', 3, "DisplayName", true_der_name);
 hold off;
-grid on;
-set(gca, 'FontSize', 14);
-xlabel('t', 'FontSize', 16);
-ylabel('dy/dt', 'FontSize', 16);
-legend(FontSize=16);
+
 x_pos = 0.01;  
 y_pos = 10; 
 text(x_pos, y_pos, sprintf('$\\sqrt{\\frac{1}{n}\\sum_{i=1}^n (\\hat{y}_i - y_i)^2}$ = %.4f', RMSE_regression), ...
     'Interpreter', 'latex', 'FontSize', 14, 'BackgroundColor', 'white', 'EdgeColor', 'black');
 
-
-
-% Adjust layout
-set(gcf, 'Units', 'Inches');
-pos = get(gcf, 'Position');
-set(gcf, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos(3), pos(4)]);
+grid on;
+set(gca, 'FontSize', 14);
+xlabel('t', 'FontSize', 16);
+ylabel('dy/dt', 'FontSize', 16);
+legend(FontSize=16);
 
 % Save the figure
 print('ROB501-HW6-P2-Derivatives.png', '-dpng', '-r300');
 
-% Function to add new data and replace old data in the moving window
-function window = insert_point(window, new_point, window_size)
-    if length(window) < window_size
-        window(end + 1) = new_point;
-    else
-        window = [window(2:end), new_point];
-    end
-end
+%% Various Functions
 
-% Function to find best fit coefficients
-function best_fit_coeff = findBestFit(A, y)
+%% Function that Simulates Data Postprocessing in Real Time
+function [t_processed, y_derivative, y_naive] = processData(t, y, window_size)
+     
+    % Output Arrays
+    y_derivative = [];
+    y_naive = [];
+    t_processed = [];
+
+    % Define Arrays for Moving Window
+    t_window = [];
+    y_window = [];
+
+    % Temp Variables
+    last_index = 0;
+    old_y = NaN;
+    old_t = NaN;
+    new_y = NaN;
+    new_t = NaN;
+
+    while (~isnan(new_y)) || (last_index == 0)
+
+        % Update old and new values
+        old_t = new_t;
+        old_y = new_y;
+        [new_t, new_y, last_index] = probeNext(t, y, last_index);
+
+        if isnan(new_y)
+            break
+        end
+
+        % Update windows
+        t_window = insert_point(t_window, new_t, window_size);
+        y_window = insert_point(y_window, new_y, window_size);
+            
+        % Compute Naive and Regression Derivative
+        naive_der_val = estimateNaiveDerivative(new_t, new_y, old_t, old_y);
+        
+        % Compute Second Order Regression Derivative
+        regression_der_val = estimateSecondOrderRegressionDerivative(t_window, y_window);
+
+        % Store results
+        y_naive(end + 1) = naive_der_val;
+        y_derivative(end + 1) = regression_der_val;
     
-    if (det(A'*A) ~= 0)
-        best_fit_coeff = inv(A'*A)*A'* y;
-    else
-        best_fit_coeff = nan(size(A,2));
     end
 
+    % Remove the initial results, where there is not enough data to estimate the derivatve.
+    t_processed = t(window_size:end);
+    y_naive = y_naive(window_size:end);
+    y_derivative = y_derivative(window_size:end);
 
 end
 
-% Function to get next data point
+%% Simulate Probing Next Datapoint
 function [new_t, new_y, last_index] = probeNext(t, y, last_index)
     
     last_index = last_index + 1;
-
 
     if last_index <= length(t)
         new_t = t(last_index);
@@ -191,4 +152,55 @@ function [new_t, new_y, last_index] = probeNext(t, y, last_index)
         new_t = nan;
         new_y = nan;
     end
+end
+
+%% Insert New Point into a Moving Window of Fixed Size
+function window = insert_point(window, new_point, window_size)
+    if length(window) < window_size
+        window(end + 1) = new_point;
+    else
+        window = [window(2:end), new_point];
+    end
+end
+
+%% Estimate Naive Derivative
+function naive_der_val = estimateNaiveDerivative(new_t, new_y, old_t, old_y)
+    if isnan(old_t) || isnan(old_y)
+        naive_der_val = 0;
+    else
+        naive_der_val = (new_y - old_y) / (new_t - old_t);
+    end
+end
+
+%% Estimate Second Order Regression Derivative
+function best_der_fit_val = estimateSecondOrderRegressionDerivative(t_window, y_window)
+    
+    normalized_t_window = t_window - min(t_window);
+      
+    A = [ones(size(normalized_t_window')), normalized_t_window', (normalized_t_window').^2];
+    best_fit = findBestFit(A, y_window');
+
+    if ~any(isnan(best_fit))
+        best_fit_der = polyder(flip(best_fit));
+        best_der_fit_val = polyval(best_fit_der, normalized_t_window(end));
+    else
+        best_der_fit_val = nan;
+    end
+
+end
+
+%% Find Best Fit Regression
+function best_fit_coeff = findBestFit(A, y)
+    
+    if (det(A'*A) ~= 0)
+        best_fit_coeff = inv(A'*A)*A'* y;
+    else
+        best_fit_coeff = nan(size(A,2));
+    end
+end
+
+%% Compute RMSE
+function RMSE = computeRMSE(trueVals, estimatedVals)
+    RMSE = sqrt(mean((trueVals - estimatedVals).^2, "all"));
+    
 end
