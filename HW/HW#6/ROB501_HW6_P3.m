@@ -22,7 +22,7 @@ RMSE_naive = computeRMSE(dy(window_size:end), y_naive');
 %% Plot the Results
 
 figure('Position', [100, 100, 1600, 900]);
-sgtitle('Figure 1. Problem 3, Comparing dy/dt Eßstimation Techniques',...
+sgtitle('Figure 2. Problem 3, Comparing dy/dt Eßstimation Techniques',...
     'FontSize', 24, 'FontWeight', 'bold');
 
 % Show Original Data
