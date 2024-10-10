@@ -48,7 +48,7 @@ plot(t, dy, 'r--', 'LineWidth', 3, "DisplayName", true_der_name);
 hold off;
 
 x_pos = 0.01;  
-y_pos = 10; 
+y_pos = 30; 
 text(x_pos, y_pos, sprintf('$\\sqrt{\\frac{1}{n}\\sum_{i=1}^n (\\hat{y}_i - y_i)^2}$ = %.4f', RMSE_naive), ...
     'Interpreter', 'latex', 'FontSize', 14, 'BackgroundColor', 'white', 'EdgeColor', 'black');
 
@@ -71,7 +71,7 @@ plot(t, dy, 'r--', 'LineWidth', 3, "DisplayName", true_der_name);
 hold off;
 
 x_pos = 0.01;  
-y_pos = 10; 
+y_pos = 30; 
 text(x_pos, y_pos, sprintf('$\\sqrt{\\frac{1}{n}\\sum_{i=1}^n (\\hat{y}_i - y_i)^2}$ = %.4f', RMSE_regression), ...
     'Interpreter', 'latex', 'FontSize', 14, 'BackgroundColor', 'white', 'EdgeColor', 'black');
 

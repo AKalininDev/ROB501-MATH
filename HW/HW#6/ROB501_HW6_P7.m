@@ -1,4 +1,4 @@
-%% ROB 501. HW#6 Problem 7.
+%% ROB 501. HW#6 Problem 7 - Anatolii Kalinin
 % Implementing the Matrix Inversion Lemma
 
 %% Clear Workspace and Close All Figures
@@ -16,7 +16,12 @@ B = [3; 0; 2; 0; 1];
 C = [0.25];
 D = B';
 
-inverse = inv_A_BCD(inv_A, B, C, D)
+inverse = inv_A_BCD(inv_A, B, C, D);
+
+%% Show the Result
+display(inverse)
+
+%% Functions
 
 %% Compute (A + BCD)^(-1)
 function inverse = inv_A_BCD(inv_A, B, C, D)
@@ -43,9 +48,10 @@ function inverse = inv_A_BCD(inv_A, B, C, D)
 
     inverse = inv_A - inv_A*B*inv(intermediate)*D*inv_A;
 
-
+    return;
 end
 
+%% Check if A B C D are Compatible for the Operation
 function compatible = isCompatible(inv_A, B, C, D)
 
     [rows_a, cols_a] = size(inv_A);
@@ -99,6 +105,8 @@ function compatible = isCompatible(inv_A, B, C, D)
     compatible = true;  
 end
 
+%% Check if Matrix is Invertable
 function invertible = isInvertible(matrix)
     invertible = abs(det(matrix)) > 0;
+    return;
 end
