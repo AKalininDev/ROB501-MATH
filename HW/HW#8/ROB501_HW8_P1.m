@@ -16,19 +16,13 @@ Q = [1, 0.5, 0.5, 0.25;
     0.25, 1.0, 1.0, 4];
 
 % BLUE estimate of x using 2 values of y
-[x_hat_2, covariance_m_2] = BLUE_estimate(A, y, Q, 2);
-x_hat_2
-covariance_m_2
+[x_hat_2, covariance_m_2] = BLUE_estimate(A, y, Q, 2)
 
 % BLUE estimate of x using 3 values of y
-[x_hat_3, covariance_m_3] = BLUE_estimate(A, y, Q, 3);
-x_hat_3
-covariance_m_3
+[x_hat_3, covariance_m_3] = BLUE_estimate(A, y, Q, 3)
 
 % BLUE estimate of x using all values of y
-[x_hat_all, covariance_m_all] = BLUE_estimate(A, y, Q, 4);
-x_hat_all
-covariance_m_all
+[x_hat_all, covariance_m_all] = BLUE_estimate(A, y, Q, 4)
 
 %% Compute BLUE estimate of x using n values of y
 function [x_hat, covariance_m] = BLUE_estimate(A, y, Q, n)
