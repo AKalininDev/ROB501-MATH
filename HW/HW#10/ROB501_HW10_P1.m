@@ -46,7 +46,7 @@ f_new
 
 % Compute the numerical Jacobian of f_new
 x_star  = [1, 1, 1, 1, 1];
-[J_x_star_num_new, delta_new] = iterative_jacobian(@funcPartC, x0);
+[J_x_star_num_new, delta_new] = iterative_jacobian(@funcPartC, x_star);
 
 disp("Numerical Jacobian @ [1, 1, 1, 1, 1]:")
 J_x_star_num_new
