@@ -2,7 +2,7 @@
 % Implementing Newton-Raphson Method to solve F(x) = 0
 
 %% Define the Initial Guess and Solver Parameters
-x_initial = [-10; 10];
+x_initial = [10; 10];
 eps = 1e-10; % Tolerance for convergence
 
 
@@ -23,12 +23,10 @@ while d_norm > eps
 end
 
 %% Show the Results
-disp('Initial guess = ');
-disp(x_initial);
-disp('F(x) = ');
-disp(F(x_current));
-disp('x = ');
-disp(x_current);
+x_initial
+x_current
+F(x_current)
+
 
 %% Function Definitions
 
